@@ -87,22 +87,53 @@ def classifyPose(landmarks, frame, display=False):
     right_knee_angle = calculateAngle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
                                       landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
                                       landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value])
+    left_hip_angle = calculateAngle(
+                landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]
+            )
+    right_hip_angle = calculateAngle(
+                landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value]
+            )
 
     # Determine pose based on angles
     if left_elbow_angle > 165 and left_elbow_angle < 195 and right_elbow_angle > 165 and right_elbow_angle < 195:
         if left_shoulder_angle > 80 and left_shoulder_angle < 110 and right_shoulder_angle > 80 and right_shoulder_angle < 110:
             if left_knee_angle > 165 and left_knee_angle < 195 or right_knee_angle > 165 and right_knee_angle < 195:
                 if left_knee_angle > 90 and left_knee_angle < 120 or right_knee_angle > 90 and right_knee_angle < 120:
-                    label = 'Warrior II Pose'
-                    correction_instruction = "Try to straighten your knees more."
+                    label = 'Warrior Pose'
+                    correction_instruction = "Warrior Pose or Virabhadrasana.You've extended one leg forward in a deep lunge, with arms stretched parallel and gaze forward.This pose strengthens the legs, opens hips, and enhances stamina."
             if left_knee_angle > 160 and left_knee_angle < 195 and right_knee_angle > 160 and right_knee_angle < 195:
-                label = 'T Pose'
-                correction_instruction = "Stand with your feet together and arms at your sides."
+                if(160<= left_hip_angle <= 200 and 160 <= right_hip_angle <= 200):
+                    label = 'T Pose'
+                    correction_instruction = "T pose or Tadasana.ou've successfully stood firm with feet together, arms raised straight up, spine elongated, and balanced.Tadasana improves posture, strengthens legs, and enhances focus."
+
+    if (290 <= left_elbow_angle <= 345 and
+    20 <= right_elbow_angle <= 70 and
+    30 <= left_shoulder_angle <= 80 and
+    20 <= right_shoulder_angle <= 70 and
+    160 <= left_knee_angle <= 210 and
+    150 <= right_knee_angle <= 200):
+        label = 'Prayer Pose.'
+        correction_instruction = "Prayer pose or Pranamasana.You've brought your palms together in front of your chest, standing tall with feet together.Pranamasana calms the mind, improves posture, and prepares for deeper poses."
+
+    if (140 <= left_elbow_angle <= 200 and
+      140 <= right_elbow_angle <= 200 and
+      50 <= left_shoulder_angle <= 110 and
+      100 <= right_shoulder_angle <= 160 and
+      150 <= left_knee_angle <= 200 and
+      150 <= right_knee_angle <= 200 and
+      (20 <= left_hip_angle <= 80 and 110 <= right_hip_angle <= 170)or
+      (290 <= right_hip_angle <= 340 and 190 <= left_hip_angle <= 260)):
+        label = 'Triangle Pose'
+        correction_instruction = "Triangle Pose or Trikonasana. You've successfully bent sideways with legs wide apart, one arm reaching to the ground, and the other extended upward. It stretches the legs, groin, and torso while improving digestion and balance."
 
     if left_knee_angle > 165 and left_knee_angle < 195 or right_knee_angle > 165 and right_knee_angle < 195:
         if left_knee_angle > 315 and left_knee_angle < 335 or right_knee_angle > 25 and right_knee_angle < 45:
             label = 'Tree Pose'
-            correction_instruction = "Lift one foot and place it on your inner thigh or calf."
+            correction_instruction = "Tree Pose or Vrikshasana. You've balanced on one leg, with the other foot placed against the inner thigh, hands joined in prayer above the head. It strengthens legs, improves balance, and stretches the inner thighs. "
 
     # Set color based on pose detected
     if label != 'Unknown Pose':
